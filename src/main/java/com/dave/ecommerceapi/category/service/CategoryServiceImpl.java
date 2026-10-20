@@ -1,6 +1,7 @@
 package com.dave.ecommerceapi.category.service;
 
 import com.dave.ecommerceapi.category.dto.request.CategoryRequest;
+import com.dave.ecommerceapi.category.dto.response.CategoryPageResponse;
 import com.dave.ecommerceapi.category.dto.response.CategoryResponse;
 import com.dave.ecommerceapi.category.entity.Category;
 import com.dave.ecommerceapi.category.exception.CategoryAlreadyExistsException;
@@ -8,6 +9,10 @@ import com.dave.ecommerceapi.category.exception.CategoryNotFoundException;
 import com.dave.ecommerceapi.category.mapper.CategoryMapper;
 import com.dave.ecommerceapi.category.repository.CategoryRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -38,9 +43,62 @@ public class CategoryServiceImpl implements  CategoryService {
     }
 
     @Override
-    public List<CategoryResponse> getAllCatogories() {
-        return List.of();
-    }
+    public CategoryPageResponse getAllCatogories(int page, int size, String sortBy, String direction)
+        {
+
+            if (page < 0) {
+                throw new IllegalArgumentException(
+                        "Page number cannot be negative."
+                );
+            }
+
+            if (size < 1 || size > 100) {
+                throw new IllegalArgumentException(
+                        "Page size must be between 1 and 100."
+                );
+            }
+
+            if (!"id".equals(sortBy)
+                    && !"name".equals(sortBy)
+                    && !"createdAt".equals(sortBy)
+                    && !"updatedAt".equals(sortBy)) {
+                throw new IllegalArgumentException(
+                        "Unsupported sort field. Allowed fields: id, name, createdAt, updatedAt."
+                );
+            }
+
+            Sort.Direction sortDirection;
+
+            try {
+                sortDirection = Sort.Direction.fromString(direction);
+            } catch (IllegalArgumentException exception) {
+                throw new IllegalArgumentException(
+                        "Sort direction must be either ASC or DESC."
+                );
+            }
+
+            Pageable pageable = PageRequest.of(
+                    page,
+                    size,
+                    Sort.by(sortDirection, sortBy)
+            );
+
+            Page<CategoryResponse> categoryPage = categoryRepository
+                    .findAll(pageable)
+                    .map(categoryMapper::toResponse);
+
+            return new CategoryPageResponse(
+                    categoryPage.getContent(),
+                    categoryPage.getNumber(),
+                    categoryPage.getSize(),
+                    categoryPage.getTotalElements(),
+                    categoryPage.getTotalPages(),
+                    categoryPage.isFirst(),
+                    categoryPage.isLast()
+            );
+        }
+
+
 
     @Override
     public List<CategoryResponse> getAllCategories(){

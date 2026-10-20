@@ -1,4 +1,4 @@
-package com.dave.ecommerceapi.category;
+package com.dave.ecommerceapi.category.controller;
 
 import com.dave.ecommerceapi.category.dto.request.CategoryRequest;
 import com.dave.ecommerceapi.category.dto.response.CategoryResponse;
