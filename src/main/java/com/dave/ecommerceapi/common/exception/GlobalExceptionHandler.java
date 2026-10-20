@@ -3,6 +3,7 @@ package com.dave.ecommerceapi.common.exception;
 
 import com.dave.ecommerceapi.category.exception.CategoryAlreadyExistsException;
 import com.dave.ecommerceapi.category.exception.CategoryNotFoundException;
+import com.dave.ecommerceapi.category.exception.InvalidPaginationException;
 import com.dave.ecommerceapi.common.dto.ApiErrorResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
@@ -130,6 +131,20 @@ public class GlobalExceptionHandler {
                 request.getRequestURI()
         );
     }
+
+
+    @ExceptionHandler(InvalidPaginationException.class)
+    public ResponseEntity<ApiErrorResponse> handleInvalidPagination(
+            InvalidPaginationException exception,
+            HttpServletRequest request) {
+
+        return buildResponse(
+                HttpStatus.BAD_REQUEST,
+                exception.getMessage(),
+                request.getRequestURI()
+        );
+    }
+
 
     private ResponseEntity<ApiErrorResponse> buildResponse(
             HttpStatus status,

@@ -9,9 +9,12 @@ import java.util.List;
 public interface CategoryService {
     CategoryResponse createCategory(CategoryRequest request);
     CategoryResponse getCategoryById(Long id);
-    CategoryPageResponse getAllCatogories(int page, int size, String sortBy, String direction);
+    CategoryPageResponse getAllCategories(int page, int size, String sortBy, String direction);
+
     CategoryResponse updateCategory(Long id, CategoryRequest request);
     void deleteCategory(Long id);
 
-    List<CategoryResponse> getAllCategories();
+
+
+
 }

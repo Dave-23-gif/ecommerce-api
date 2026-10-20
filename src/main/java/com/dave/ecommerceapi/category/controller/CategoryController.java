@@ -1,6 +1,7 @@
 package com.dave.ecommerceapi.category.controller;
 
 import com.dave.ecommerceapi.category.dto.request.CategoryRequest;
+import com.dave.ecommerceapi.category.dto.response.CategoryPageResponse;
 import com.dave.ecommerceapi.category.dto.response.CategoryResponse;
 import com.dave.ecommerceapi.category.service.CategoryService;
 import jakarta.validation.Valid;
@@ -27,9 +28,18 @@ public class CategoryController {
         return ResponseEntity.ok(response);
     }
     @GetMapping
-    public ResponseEntity<List<CategoryResponse>> getAllCategories(){
-        List<CategoryResponse> categories=categoryService.getAllCategories();
-        return ResponseEntity.ok(categories);
+    public ResponseEntity<CategoryPageResponse> getAllCategories(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "id") String sortBy,
+            @RequestParam(defaultValue = "ASC") String direction) {
+        CategoryPageResponse response = categoryService.getAllCategories(
+                page,
+                size,
+                sortBy,
+                direction
+        );
+        return ResponseEntity.ok(response);
     }
     @PutMapping("/{id}")
     public ResponseEntity<CategoryResponse> updateCategoryById(@PathVariable Long id, @Valid @RequestBody CategoryRequest request){
