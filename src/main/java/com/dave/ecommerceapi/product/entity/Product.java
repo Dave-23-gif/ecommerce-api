@@ -93,12 +93,14 @@ public class Product {
     }
 
     public void updateDetails(
+            String sku,
             String name,
             String description,
             BigDecimal price,
             String currency,
             Category category
     ) {
+        this.sku=sku;
         this.name = name;
         this.description = description;
         this.price = price;

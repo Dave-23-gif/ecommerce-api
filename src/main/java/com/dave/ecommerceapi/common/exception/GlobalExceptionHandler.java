@@ -5,6 +5,9 @@ import com.dave.ecommerceapi.category.exception.CategoryAlreadyExistsException;
 import com.dave.ecommerceapi.category.exception.CategoryNotFoundException;
 import com.dave.ecommerceapi.category.exception.InvalidPaginationException;
 import com.dave.ecommerceapi.common.dto.ApiErrorResponse;
+import com.dave.ecommerceapi.product.exception.InvalidProductPaginationException;
+import com.dave.ecommerceapi.product.exception.ProductAlreadyExistsException;
+import com.dave.ecommerceapi.product.exception.ProductNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -138,6 +141,41 @@ public class GlobalExceptionHandler {
             InvalidPaginationException exception,
             HttpServletRequest request) {
 
+        return buildResponse(
+                HttpStatus.BAD_REQUEST,
+                exception.getMessage(),
+                request.getRequestURI()
+        );
+    }
+    @ExceptionHandler(ProductNotFoundException.class)
+    public ResponseEntity<ApiErrorResponse> handleProductNotFound(
+            ProductNotFoundException exception,
+            HttpServletRequest request
+    ) {
+        return buildResponse(
+                HttpStatus.NOT_FOUND,
+                exception.getMessage(),
+                request.getRequestURI()
+        );
+    }
+
+    @ExceptionHandler(ProductAlreadyExistsException.class)
+    public ResponseEntity<ApiErrorResponse> handleProductAlreadyExists(
+            ProductAlreadyExistsException exception,
+            HttpServletRequest request
+    ) {
+        return buildResponse(
+                HttpStatus.CONFLICT,
+                exception.getMessage(),
+                request.getRequestURI()
+        );
+    }
+
+    @ExceptionHandler(InvalidProductPaginationException.class)
+    public ResponseEntity<ApiErrorResponse> handleInvalidProductPagination(
+            InvalidProductPaginationException exception,
+            HttpServletRequest request
+    ) {
         return buildResponse(
                 HttpStatus.BAD_REQUEST,
                 exception.getMessage(),
