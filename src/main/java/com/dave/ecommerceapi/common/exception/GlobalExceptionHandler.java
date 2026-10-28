@@ -1,6 +1,9 @@
 
 package com.dave.ecommerceapi.common.exception;
 
+import com.dave.ecommerceapi.cart.exceptions.CartCurrencyMismatchException;
+import com.dave.ecommerceapi.cart.exceptions.CartNotFoundException;
+import com.dave.ecommerceapi.cart.exceptions.ProductNotAvailableException;
 import com.dave.ecommerceapi.category.exception.CategoryAlreadyExistsException;
 import com.dave.ecommerceapi.category.exception.CategoryNotFoundException;
 import com.dave.ecommerceapi.category.exception.InvalidPaginationException;
@@ -182,7 +185,41 @@ public class GlobalExceptionHandler {
                 request.getRequestURI()
         );
     }
+    @ExceptionHandler(CartNotFoundException.class)
+    public ResponseEntity<ApiErrorResponse> handleCartNotFound(
+            CartNotFoundException exception,
+            HttpServletRequest request) {
 
+        return buildResponse(
+                HttpStatus.NOT_FOUND,
+                exception.getMessage(),
+                request.getRequestURI()
+        );
+    }
+
+    @ExceptionHandler(ProductNotAvailableException.class)
+    public ResponseEntity<ApiErrorResponse> handleProductNotAvailable(
+            ProductNotAvailableException exception,
+            HttpServletRequest request) {
+
+        return buildResponse(
+                HttpStatus.CONFLICT,
+                exception.getMessage(),
+                request.getRequestURI()
+        );
+    }
+
+    @ExceptionHandler(CartCurrencyMismatchException.class)
+    public ResponseEntity<ApiErrorResponse> handleCartCurrencyMismatch(
+            CartCurrencyMismatchException exception,
+            HttpServletRequest request) {
+
+        return buildResponse(
+                HttpStatus.BAD_REQUEST,
+                exception.getMessage(),
+                request.getRequestURI()
+        );
+    }
 
     private ResponseEntity<ApiErrorResponse> buildResponse(
             HttpStatus status,
