@@ -17,8 +17,12 @@ spring:
     show-sql: false
   flyway:
     enabled: true
-
-
+app:
+    security:
+      jwt:
+        secret: ${JWT_SECRET}
+        expiration: 900
+        issuer: ecommerce-api
 
 
 
